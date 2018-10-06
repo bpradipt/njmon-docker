@@ -1,0 +1,71 @@
+##Template created with https://github.com/bpradipt/generator-kubegen
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+    labels:
+        name: njmon-deploy
+    name: njmon-deploy
+    namespace: kube-system
+spec:
+    selector:
+        matchLabels:
+            app: njmon-deploy
+    template:
+        metadata:
+            labels:
+                app: njmon-deploy
+        spec:
+            hostPID: true
+            hostIPC: true
+            hostNetwork: false
+            containers:
+                -
+                    name: njmon-deploy
+                    image: bpradipt/njmon
+                    imagePullPolicy: IfNotPresent
+                    securityContext:
+                        privileged: true
+                    volumeMounts:
+                        -
+                            mountPath: /etc
+                            name: host-etc
+                            readOnly: true
+                        -
+                            mountPath: /sys
+                            name: host-sys
+                        -
+                            mountPath: /dev
+                            name: host-dev
+                        -
+                            mountPath: /njmon-data
+                            name: njmon-data-volume
+            volumes:
+                -
+                    name: njmon-data-volume
+                    hostPath:
+                        path: /njmon-data
+                        type: DirectoryOrCreate
+                -
+                    name: host-etc
+                    hostPath:
+                        path: /etc
+                        type: Directory
+                -
+                    name: host-dev
+                    hostPath:
+                        path: /dev
+                        type: Directory
+                -
+                    name: host-sys
+                    hostPath:
+                        path: /sys
+                        type: Directory
+
+            tolerations:
+                -
+                    effect: NoSchedule
+                    key: dedicated
+                    operator: Exists
+                -
+                    key: CriticalAddonsOnly
+                    operator: Exists
