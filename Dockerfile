@@ -9,6 +9,6 @@ COPY --from=0 /njmon/njmon_linux_x86_ubuntu18_v10 /usr/bin/njmon
 RUN chmod +x /usr/bin/njmon
 
 ADD entrypoint.sh /
-WORKDIR /nmon-data
+WORKDIR /njmon-data
 
 ENTRYPOINT ["/entrypoint.sh"]
