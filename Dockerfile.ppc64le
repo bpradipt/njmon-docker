@@ -1,8 +1,11 @@
 FROM ppc64le/ubuntu:16.04
 
 RUN apt-get update && apt-get install -y wget unzip
-RUN wget http://sourceforge.net/projects/nmon/files/njmon_binaries_v10b.zip
-RUN unzip njmon_binaries_v10b.zip -d /njmon
+ENV VERSION="v66"
+ENV PLATFORM="linux"
+
+RUN wget http://sourceforge.net/projects/nmon/files/njmon_$PLATFORM_binaries_$VERSION.zip
+RUN unzip njmon_$PLATFORM_binaries_$VERSION.zip -d /njmon
 
 FROM ppc64le/ubuntu:16.04
 COPY --from=0 /njmon/njmon_linux_ppc_ubuntu18_v10 /usr/bin/njmon
